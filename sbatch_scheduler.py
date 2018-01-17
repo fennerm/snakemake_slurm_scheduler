@@ -29,6 +29,7 @@ def main(args):
     cmd = cmd + [
         "--tasks-per-node", threads, "--mem", mem, "--job-name", name, jobscript
     ]
+    cmd = ' '.join(cmd)
 
     # Submit job
     print(
@@ -37,7 +38,8 @@ def main(args):
             "threads : " + threads, "mem : " + mem
         ]),
         file=sys.stderr)
-    os.system(' '.join(cmd))
+    print("Full command: " + cmd, file=sys.stderr)
+    os.system(cmd)
 
 
 if __name__ == "__main__":
