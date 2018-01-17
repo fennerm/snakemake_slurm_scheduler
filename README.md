@@ -4,8 +4,7 @@
 **Usage:**
 
 ```bash
-  snakemake --cluster snakemake_sbatch_scheduler.py --cluster-config -j 499 \
-  --immediate-submit "$@"
+  snakemake --cluster snakemake_sbatch_scheduler.py -j 499 --immediate-submit
 ```
 
 Set -j to the max value allowed by your system administrator.
