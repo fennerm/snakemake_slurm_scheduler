@@ -8,3 +8,8 @@
 ```
 
 Set -j to the max value allowed by your system administrator.
+
+Job memory and thread requirements are read from the Snakefile. The cluster
+config file is ignored.
+
+By default jobs request 10 gigabytes of memory and 1 thread.
