@@ -17,7 +17,7 @@ def main(args):
     job_resources = job_properties["resources"]
     name = str(job_properties['rule'])
     threads = str(job_properties.get("threads", "1"))
-    mem = str(job_resources.get("mem", "10"))
+    mem = str(job_resources.get("mem", "10G"))
 
     cmd = ['sbatch']
 
