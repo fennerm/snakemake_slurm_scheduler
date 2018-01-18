@@ -12,7 +12,7 @@ from snakemake.utils import read_job_properties
 def main(args):
     # Get job information
     dependencies = set(args[1:-1])
-    jobscript = str(args[1])
+    jobscript = str(args[-1])
     job_properties = read_job_properties(jobscript)
     job_resources = job_properties["resources"]
     name = str(job_properties['rule'])
