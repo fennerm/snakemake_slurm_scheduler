@@ -34,6 +34,7 @@ class SnakemakeSbatchScheduler():
     dependencies: List[str]
     List of SLURM job ids
     '''
+
     def __init__(self, jobscript, dependencies=None):
         self.jobscript = jobscript
         self.dependencies = dependencies
@@ -52,10 +53,11 @@ class SnakemakeSbatchScheduler():
             cmd.append("--dependency")
             cmd.append(','.join(['afterok:%s' % d for d in self.dependencies]))
 
-        cmd += ['--job-name', self.jobname]
-        cmd += ['--tasks-per-node', self.threads]
-        cmd += ['--mem', self.mem]
-        cmd += [self.jobscript]
+        cmd += ['--job-name', self.jobname,
+                '--tasks-per-node', self.threads,
+                '--mem', self.mem,
+                self.jobscript]
+
         return cmd
 
     def print_summary(self):
