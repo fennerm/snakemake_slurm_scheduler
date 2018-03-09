@@ -12,13 +12,14 @@ from subprocess import (
     STDOUT,
 )
 import sys
+from time import sleep
 
+from plumbum import ProcessExecutionError
+from plumbum.cmd import (
+    grep,
+    squeue,
+)
 from snakemake.utils import read_job_properties
-
-
-def errprint(x):
-    '''Print to stderr'''
-    print(x, file=sys.stderr)
 
 
 class SnakemakeSbatchScheduler():
@@ -65,14 +66,39 @@ class SnakemakeSbatchScheduler():
         errprint('mem(mb): ' + self.mem)
         errprint('sbatch command: ' + ' '.join(self.command))
 
+    def has_remaining_dependencies(self):
+        '''Return True if the job has dependencies'''
+        remaining_dependencies = []
+        for dependency in self.dependencies:
+            try:
+                (squeue | grep[dependency])()
+                remaining_dependencies.append(dependency)
+            except ProcessExecutionError:
+                pass
+
     def submit(self):
         '''Submit job to SLURM'''
+        if self.jobname == 'all':
+            # If snakemake is passed the immediate-submit parameter, its main
+            # process terminates as soon as all jobs are submitted. This
+            # masks further updates on job completions/failures. To avoid this
+            # we wait until all jobs are complete before submitting 'all' for
+            # scheduling.
+            while self.has_remaining_dependencies():
+                sleep(10)
+
         self.print_summary()
         sbatch_stdout = Popen(self.command, stdout=PIPE,
                               stderr=STDOUT).communicate()[0]
 
-        # Snakemake expects the job's id to be sent to stdout by the scheduler
+        # Snakemake expects the job's id to be sent to stdout by the
+        # scheduler
         print("%i" % int(sbatch_stdout.split()[-1]), file=sys.stdout)
+
+
+def errprint(x):
+    '''Print to stderr'''
+    print(x, file=sys.stderr)
 
 
 if __name__ == "__main__":
