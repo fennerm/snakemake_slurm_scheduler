@@ -70,13 +70,13 @@ class SnakemakeSbatchScheduler():
 
     def has_remaining_dependencies(self):
         '''Return True if the job has dependencies'''
-        remaining_dependencies = []
         for dependency in self.dependencies:
             try:
                 (squeue | grep[dependency])()
-                remaining_dependencies.append(dependency)
+                return True
             except ProcessExecutionError:
                 pass
+        return False
 
     def submit(self):
         '''Submit job to SLURM'''
