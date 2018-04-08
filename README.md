@@ -1,4 +1,3 @@
-# snakemake_sbatch_scheduler
 ## A simple snakemake SLURM scheduler with immediate-submit support
 
 **Usage:**
